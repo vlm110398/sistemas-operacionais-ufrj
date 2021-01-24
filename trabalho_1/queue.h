@@ -1,11 +1,12 @@
 #include "process.h"
 #include "io.h" 
-typedef struct{
+
+typedef struct element{
     union {
       process * proc;
       io * io;
     };
-  element *next;
+  struct element *next;
 
 } element;
 typedef struct{
@@ -17,6 +18,7 @@ typedef struct{
 } queue;
 
 
-queue * init(int priority);
-void push (queue *, void *);
-element * pop (queue *);
+queue * init(int , int );
+void push (queue * , element * );
+element  pop (queue *);
+void printQueue(queue *);
