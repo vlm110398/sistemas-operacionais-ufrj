@@ -1,10 +1,13 @@
 #include "process.h"
 #include "io.h" 
+typedef enum queueType { 
+  IO, PROCESS
+} queueType;
 
 typedef struct element{
     union {
       process * proc;
-      io * io;
+      io * i_o;
     };
   struct element *next;
 
@@ -12,13 +15,18 @@ typedef struct element{
 typedef struct{
     int priority;
     int quantum;
-
+    queueType type;
     element * first;
 
 } queue;
 
+queue * initQueue(int priority, int quantum, queueType qType);
+void enqueueIo(queue * q,io * i_o);
+void enqueueProcess(queue *q,process * proc);
+void enqueueElement (queue * q, element * elem);
 
-queue * init(int , int );
-void push (queue * , element * );
-element  pop (queue *);
-void printQueue(queue *);
+io * dequeueIo(queue *q);
+process * dequeueProcess(queue *q);
+element * dequeueElement (queue * q);
+
+void printQueue(queue *q);
