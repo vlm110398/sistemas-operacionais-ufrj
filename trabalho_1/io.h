@@ -1,6 +1,7 @@
 #ifndef IO_H
 #define IO_H
 
+#include <stdlib.h>
 #include "constants.h"
 
 typedef struct{
@@ -10,6 +11,6 @@ typedef struct{
 } io_t;
 
 // initialize io
-io_t* init_io();
+io_t* init_io(IO_TYPE ioType);
 
 #endif

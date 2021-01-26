@@ -1,7 +1,5 @@
 #include "process.h"
 
-#include <stdlib.h>
-
 static int process_counter = 0;
 
 process_t* init_process(int arrival, int burst, process_t* parent)
@@ -12,6 +10,8 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 	p->status = NOT_STARTED;
 	p->arrivalTime = arrival;
 	p->burstTime = burst;
+	p->quantumCounter = 0;
+	p->io = (io_t*) malloc(sizeof(io_t));
 	
 	if(parent != NULL)
 		p->ppid = parent->pid;

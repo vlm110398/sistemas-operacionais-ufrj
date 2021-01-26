@@ -1,10 +1,10 @@
 ﻿# Trabalho 1 - Sistemas Operacionais
 
 Gabriel Martins Machado Christo - 117217732
-Vinicius Lima Medeiros - 
 
-Objetivo: Desenvolver um simulador de escalonamento de processos usando a estratégia de seleção Round Robin com Feedback
+Vinicius Lima Medeiros - 117097920
 
+Objetivo: Desenvolver um simulador de escalonamento de processos usando a estratégia de seleção Round Robin com Feedback Queue
 
 ### Arquitetura do Simulador
 
@@ -26,6 +26,11 @@ Queue - estrutura de dados de fila
 	- Processos voltando do io: depende do io
 	- Processos que sofreram preempção: fila de baixa prioridade
 
+	
+- 2 Filas de prioridade para execução dos processos (round robin)
+
+- 1 fila para execução de io (round robin)
+	
 
 ### TODO
 
@@ -33,4 +38,15 @@ Queue - estrutura de dados de fila
 - 2 filas pra cpu (low e high priority)
 - 3 filas para io
 - oque deve ser feito a cada ciclo?
+- metodo para inserir processo de volta do io na fila de prioridade
+
+
+
+
+
+
+
+
+
+
 
