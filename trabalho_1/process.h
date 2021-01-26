@@ -1,16 +1,17 @@
 #ifndef PROCESS_H
-#define PRCESS_H
+#define PROCESS_H
+
 #include "constants.h"
 
+typedef struct {
+    int pid;				// process id
+    int ppid;				// parent process id
+    PROCESS_STATUS status;	// process current status
+    int arrivalTime;		// arrival time
+    int burstTime;			// burst time
+} process_t;
 
-typedef struct{
-    int  pid;
-    int ppid;
-    PROCESS_STATUS status;
-    int arrivalTime;
-    int burstTime;
-} process;
+// initialize a process
+process_t* init_process(int arrival, int burst, process_t* parent);
 
-process * initProcess();
-
-#endif /* PROCESS_H */
+#endif

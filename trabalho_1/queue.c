@@ -1,93 +1,52 @@
 #include "queue.h"
-#include "stdio.h"
-#include "stdlib.h"
 
-queue * initQueue(int priority, int quantum, QUEUE_TYPE qType){
-    queue * q = (queue *) malloc(sizeof(queue));
-    q->priority = priority;
-    q->quantum = quantum;
+queue_t * init_queue(QUEUE_TYPE queueType)
+{
+    queue_t* q = (queue_t*) malloc(sizeof(queue_t));
     q->first = NULL;
-    q->type = qType;
-
+    q->type = queueType;
     return q;
 }
-void enqueueIo(queue * q,io * i_o){
-    if(q->type == PROCESS){
-        printf("Essa fila é exclusiva de IO\n");
-    }
-    element * elem = (element *) malloc(sizeof(element));
-    elem->i_o = i_o;
-    elem->next = NULL;
-    enqueueElement(q,elem);
-}
-void enqueueProcess(queue *q,process * proc){
-    if(q->type == IO){
-        printf("Essa fila é exclusiva de processos\n");
-    }
-    element * elem = (element *) malloc(sizeof(element));
-    elem->proc = proc;
-    elem->next = NULL;
-    enqueueElement(q,elem);
-}
 
-
-void enqueueElement (queue * q, element * elem){
-
-    if(q->first != NULL){
-        element * nextElem = q->first;
-        while(nextElem->next != NULL){
-            nextElem = nextElem->next; 
-        }
-        nextElem->next = elem;
-    }
-    else{
-         
-        q->first = elem;
-    } 
-}
-io * dequeueIo(queue *q){
-    if(q->type == PROCESS){
-        printf("This queue is IO exclusive\n");
-        return NULL;
-    }
-    element * elem = dequeueElement(q);
-    if(elem == NULL){
-        return NULL;
-    }
-    io * i_o = elem->i_o;
-    free(elem);
-    return i_o; 
-}
-process * dequeueProcess(queue *q){
-    if(q->type == IO){
-        printf("This queue is process exclusive\n");
-    }    
-    element * elem = dequeueElement(q);
-    if(elem == NULL){
-        return NULL;
-    }
-    process * proc = elem->proc;
-    free(elem);
-    return proc; 
+void push(queue_t* q, void* element, ELEMENT_TYPE elementType)
+{
+	// creating queue element
+	queue_element_t* e = (queue_element_t*) malloc(sizeof(queue_element_t));
+    e->next = NULL;
+	if(elementType == PROCESS_ELEMENT) e->process = (process_t*) element;
+	else if(elementType == IO_ELEMENT) e->io = (io_t*) element;
     
+	// inserting on the queue
+    if(q->first != NULL){
+        queue_element_t* crrtElement = q->first;
+        while(crrtElement->next != NULL) crrtElement = crrtElement->next; 
+        crrtElement->next = e;
+    }
+    else 
+		q->first = e;
 }
-element * dequeueElement (queue * q){
+
+
+queue_element_t* pop(queue_t* q)
+{
     if(q->first == NULL){
         printf("This queue is empty\n");
         return NULL;
     }
     else{
-        element * oldFirst = q->first; 
-        if(q->first->next != NULL){
-            element * newFirst = q->first->next;
+        queue_element_t* first = q->first; 
+        if(first->next != NULL){
+            queue_element_t* newFirst = first->next;
             q->first = newFirst;
         }
-        else{
-            q->first = NULL;    
-        }       
-        return oldFirst;     
-    }    
+        else q->first = NULL;
+		
+		return first;     
+    } 
 }
-void printQueue(queue *q){
+
+
+void print_queue(queue_t* q)
+{
 
 }

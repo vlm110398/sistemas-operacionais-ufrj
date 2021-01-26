@@ -1,20 +1,19 @@
 #include<stdio.h>
+
 #include "constants.h"
 #include "queue.h"
+
 int main(){
 
-    queue * q  = initQueue(1,1, PROCESS);
+    queue_t * q  = init_queue(LOW_PRIORITY_QUEUE);
  
-    process * proc1 = initProcess(1);
-    process * proc2 = initProcess(2);
+    process_t * proc1 = init_process(0, 0, NULL);
+    process_t * proc2 = init_process(1, 1, proc1);
 
-    enqueueProcess(q, proc1); 
-    enqueueProcess(q, proc2);
-    dequeueIo(q);
-    dequeueProcess(q);
-    dequeueProcess(q);
-    dequeueProcess(q);
-    printf("");
+    push(q, (void*)proc1, PROCESS_ELEMENT);
+    push(q, (void*)proc2, PROCESS_ELEMENT);
+    pop(q);
+    pop(q);
 
     return 0;
 }
