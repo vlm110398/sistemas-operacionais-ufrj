@@ -1,8 +1,10 @@
 #include<stdio.h>
-#include"queue.h" 
+#include "constants.h"
+#include "queue.h"
 int main(){
 
     queue * q  = initQueue(1,1, PROCESS);
+ 
     process * proc1 = initProcess(1);
     process * proc2 = initProcess(2);
 

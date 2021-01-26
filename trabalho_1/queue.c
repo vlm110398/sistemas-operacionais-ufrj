@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-queue * initQueue(int priority, int quantum, queueType qType){
+queue * initQueue(int priority, int quantum, QUEUE_TYPE qType){
     queue * q = (queue *) malloc(sizeof(queue));
     q->priority = priority;
     q->quantum = quantum;
