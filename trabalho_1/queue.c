@@ -14,10 +14,6 @@ queue_element_t* init_queue_element(process_t* process)
 	queue_element_t* e = (queue_element_t*) malloc(sizeof(queue_element_t));
 	e->next = NULL;
 	e->process = process;
-	e->beginTime = 0;
-	e->endTime = 0;
-	e->tempBeginTime = 0;
-	e->tempEndTime = 0;
 	return e;
 }
 
@@ -71,7 +67,6 @@ void print_queue(queue_t* q)
 	for(int i = 0; i < q->length; i++)
 	{
 		print_process(crrtElement->process);
-		printf("BeginTime:%d\tEndTime:%d\n", crrtElement->beginTime, crrtElement->endTime);
 		crrtElement = crrtElement->next;
 	}
 }

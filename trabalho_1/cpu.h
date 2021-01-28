@@ -33,8 +33,8 @@ bool all_process_has_finished(process_t** processes);
 // initialize simulation loop
 void start_simulation(cpu_t* cpu);
 
-// put new process in cpu
-
+// return next process to be executed
+process_t* get_next_process_to_be_executed(cpu_t* cpu);
 
 
 #endif

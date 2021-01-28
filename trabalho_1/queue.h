@@ -10,10 +10,6 @@
 typedef struct queue_element_t
 { 	
 	process_t* process;				// current element process
-	int beginTime;					// starting time
-	int endTime;  					// finishing time
-	int tempBeginTime;				// auxiliar starting time variable
-	int tempEndTime;				// auxiliar finishing time variable
 	struct queue_element_t* next; 	// next element pointer
 
 } queue_element_t;

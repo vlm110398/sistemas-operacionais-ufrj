@@ -8,15 +8,15 @@ Objetivo: Desenvolver um simulador de escalonamento de processos utilizando a es
 
 ### Arquitetura do Simulador
 
-Constants - definição de enumerações e valores estáticos utilizados pelo simulador
+Constants - Definição de enumerações e valores estáticos utilizados pelo simulador
 
-Process - métodos referentes à estrutura de processos
+Process - Métodos referentes à estrutura de processos
 
-IO - métodos referentes à estrutura de i/o
+IO - Métodos referentes à estrutura de i/o
 
-CPU - simulação dos ciclos de execução da CPU e algoritmos de escalonamento
+CPU - Simulação dos ciclos de execução da CPU e algoritmos de escalonamento. Centraliza as filas e lista de processos
 
-Queue - estrutura de dados de fila
+Queue - Estrutura de dados de fila
 
 ### Premissas do Simulador
 
@@ -44,13 +44,25 @@ Queue - estrutura de dados de fila
 ### TODO
 
 - oque deve ser feito a cada ciclo
-	- processos voltando de io (voltar pra fila)
+	
+	- detectar processos voltando de io. voltar pra fila de acordo com tipo de IO. mudar estado do processo para Ready
+	
+	- adicionar processos novos na fila de alta prioridade (se estiver no arrival time do processo)
+	
+	- checar se processo executando vai iniciar IO. Caso sim alterar estado para Blocked e enviar processo para fila de IO. resetar quantum desse processo
+	
+	- verificar se processo Running finalizou. mudar estado para finished e resetar quantum. verificar novo processo pra ser executado
+	
+	- decrementar burstTime do processo Running
+	
+	- verificar quantumCounter do processo e aplicar preempcao se necessario (processo interropido vai pra fila de baixa prioridade). executar novo processo.
 
 - liberar toda memoria alocada
 
+- metodo para detectar novo processo a ser executado (atualizar variavel crrtProcess da cpu e atualizar status)
 
 
-
+- mudar nome cpu para scheduler ?
 
 
 

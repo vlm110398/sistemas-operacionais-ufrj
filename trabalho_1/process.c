@@ -15,7 +15,7 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 	
 	if(parent != NULL)
 		p->ppid = parent->pid;
-	else p->ppid = -1;
+	else p->ppid = -1; // -1 means process has no parent
     
     return p;
 }
@@ -39,7 +39,9 @@ void print_process(process_t* process)
 	printf("Status:%s ", get_string_from_process_status(process->status));
 	printf("ArrivalTime:%d ", process->arrivalTime);
 	printf("BurstTime:%d ", process->burstTime);
-	printf("IO Type:%d\n", process->io->type);
+	printf("IO Type:%d ", process->io->type);
+	printf("Crrt Begin Time:%d ", process->beginTime);
+	printf("Crrt End Time:%d\n", process->endTime);
 }
 
 void print_processes(process_t** processes, int size)

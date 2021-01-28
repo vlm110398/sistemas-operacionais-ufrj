@@ -14,6 +14,8 @@ typedef struct
     int arrivalTime;		// arrival time
     int burstTime;			// burst time
 	int quantumCounter;     // slice time counter
+	int beginTime;			// current round robin starting time
+	int endTime;  			// current round robin finishing time
 	io_t* io;				// io operation of process
 	
 } process_t;

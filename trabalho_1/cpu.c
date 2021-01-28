@@ -30,12 +30,12 @@ bool all_process_has_finished(process_t** processes)
 
 void start_simulation(cpu_t* cpu)
 {
-	
+	// testing print queue
 	for(int i = 0; i < MAX_PROCESSES; i++)
-	{
 		push(cpu->highPriorityQueue, cpu->processes[i]);
-	}
 	print_queue(cpu->highPriorityQueue);
+	
+	
 	
 	while(all_process_has_finished(cpu->processes) == FALSE && cpu->currentCycle < MAX_CYCLES)
 	{
@@ -50,3 +50,27 @@ void start_simulation(cpu_t* cpu)
 	
 	printf("Simulation finished\n");
 }
+
+process_t* get_next_process_to_be_executed(cpu_t* cpu)
+{
+	// checking high priority queue
+	if(cpu->highPriorityQueue->length > 0)
+	{
+		// getting element from first process at queue
+		queue_element_t* e = pop(cpu->highPriorityQueue);
+		return e->process;
+	}
+	
+	// checking low priority queue
+	if(cpu->lowPriorityQueue->length > 0)
+	{
+		// getting element from first process at queue
+		queue_element_t* e = pop(cpu->lowPriorityQueue);
+		return e->process;
+	}
+	
+	// return NULL if there is no process to execute
+	return NULL;
+}
+
+
