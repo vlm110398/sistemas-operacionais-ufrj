@@ -11,6 +11,7 @@ int main(){
 	srand(1);
 	
 	process_t** allProcesses = init_random_processes(MAX_PROCESSES);
+	print_processes(allProcesses, MAX_PROCESSES);
 
 	cpu_t* cpu = init_cpu(allProcesses);
 	

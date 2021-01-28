@@ -40,7 +40,7 @@ Queue - estrutura de dados de fila
 	- checar todos processos finalizaram
 	- processos voltando de io (voltar pra fila)
 
-
+- liberar toda memoria alocada
 
 
 

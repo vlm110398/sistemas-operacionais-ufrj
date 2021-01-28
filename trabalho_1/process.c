@@ -15,6 +15,7 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 	
 	if(parent != NULL)
 		p->ppid = parent->pid;
+	else p->ppid = -1;
     
     return p;
 }
@@ -29,4 +30,40 @@ process_t** init_random_processes(int processNumber)
 	}
 	
 	return processes;
+}
+
+void print_process(process_t* process)
+{
+	printf("PID:%d ", process->pid);
+	printf("PPID:%d ", process->ppid);
+	printf("Status:%s ", get_string_from_process_status(process->status));
+	printf("ArrivalTime:%d ", process->arrivalTime);
+	printf("BurstTime:%d ", process->burstTime);
+	printf("IO Type:%d\n", process->io->type);
+}
+
+void print_processes(process_t** processes, int size)
+{
+	for(int i = 0; i < size; i++)
+	{
+		print_process(processes[i]);
+	}
+}
+
+char* get_string_from_process_status(PROCESS_STATUS status)
+{
+	switch(status)
+	{
+		case READY:
+			return "Ready";
+		case BLOCKED:
+			return "Blocked";
+		case RUNNING:
+			return "Running";
+		case FINISHED:
+			return "Finished";
+		case NOT_STARTED:
+		default:
+			return "Not Started";
+	}
 }
