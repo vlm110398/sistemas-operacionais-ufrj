@@ -4,10 +4,12 @@
 #include <stdlib.h>
 #include "constants.h"
 
-typedef struct{
+typedef struct
+{
     int startTime;	// start time
 	int finishTime;	// finish time
     IO_TYPE type;	// IO type
+	
 } io_t;
 
 // initialize io

@@ -19,7 +19,34 @@ cpu_t* init_cpu(process_t** processes)
 	return cpu;
 }
 
-bool all_process_has_finished()
+bool all_process_has_finished(process_t** processes)
 {
+	for(int i = 0; i < MAX_PROCESSES; i++)
+	{
+		if(processes[i]->status != FINISHED) return FALSE;
+	}
 	return TRUE;
+}
+
+void start_simulation(cpu_t* cpu)
+{
+	
+	for(int i = 0; i < MAX_PROCESSES; i++)
+	{
+		push(cpu->highPriorityQueue, cpu->processes[i]);
+	}
+	print_queue(cpu->highPriorityQueue);
+	
+	while(all_process_has_finished(cpu->processes) == FALSE && cpu->currentCycle < MAX_CYCLES)
+	{
+		cpu->currentCycle++;
+		printf("Current Cycle: %d\n", cpu->currentCycle);
+		
+		// todo: process logic
+		
+		// todo: round robin
+		//sleep(1);
+	}
+	
+	printf("Simulation finished\n");
 }

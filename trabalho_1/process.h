@@ -6,7 +6,8 @@
 #include "constants.h"
 #include "io.h"
 
-typedef struct {
+typedef struct
+{
     int pid;				// process id
     int ppid;				// parent process id
     PROCESS_STATUS status;	// process current status
@@ -14,6 +15,7 @@ typedef struct {
     int burstTime;			// burst time
 	int quantumCounter;     // slice time counter
 	io_t* io;				// io operation of process
+	
 } process_t;
 
 // initialize a process

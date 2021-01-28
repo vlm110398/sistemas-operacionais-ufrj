@@ -9,12 +9,22 @@ queue_t * init_queue(QUEUE_TYPE queueType)
     return q;
 }
 
-void push(queue_t* q, process_t* element)
+queue_element_t* init_queue_element(process_t* process)
+{
+	queue_element_t* e = (queue_element_t*) malloc(sizeof(queue_element_t));
+	e->next = NULL;
+	e->process = process;
+	e->beginTime = 0;
+	e->endTime = 0;
+	e->tempBeginTime = 0;
+	e->tempEndTime = 0;
+	return e;
+}
+
+void push(queue_t* q, process_t* process)
 {
 	// creating queue element
-	queue_element_t* e = (queue_element_t*) malloc(sizeof(queue_element_t));
-    e->next = NULL;
-	e->process = element;
+	queue_element_t* e = init_queue_element(process);
     
 	// inserting on the queue
     if(q->first != NULL){
@@ -56,5 +66,13 @@ queue_element_t* pop(queue_t* q)
 
 void print_queue(queue_t* q)
 {
-
+	queue_element_t* crrtElement = q->first;
+	
+	for(int i = 0; i < q->length; i++)
+	{
+		print_process(crrtElement->process);
+		printf("BeginTime:%d\tEndTime:%d\n", crrtElement->beginTime, crrtElement->endTime);
+		crrtElement = crrtElement->next;
+	}
 }
+

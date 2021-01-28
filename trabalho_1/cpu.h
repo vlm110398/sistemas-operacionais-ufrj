@@ -2,6 +2,7 @@
 #define CPU_H
 
 #include <stdlib.h>
+#include <unistd.h>
 #include "constants.h"
 #include "process.h"
 #include "io.h"
@@ -27,7 +28,13 @@ typedef struct {
 cpu_t* init_cpu(process_t** processes);
 
 // check all processes are at finished status
-bool all_process_has_finished();
+bool all_process_has_finished(process_t** processes);
+
+// initialize simulation loop
+void start_simulation(cpu_t* cpu);
+
+// put new process in cpu
+
 
 
 #endif

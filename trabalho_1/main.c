@@ -14,16 +14,7 @@ int main(){
 	print_processes(allProcesses, MAX_PROCESSES);
 
 	cpu_t* cpu = init_cpu(allProcesses);
-	
-	while(all_process_has_finished() == FALSE)
-	{
-		cpu->currentCycle++;
-		printf("Current Cycle: %d", cpu->currentCycle);
-		
-		// todo: process logic
-		
-		// todo: round robin
-	}
+	start_simulation(cpu);
 
     return 0;
 }
