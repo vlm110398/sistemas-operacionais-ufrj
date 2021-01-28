@@ -30,22 +30,43 @@ bool all_process_has_finished(process_t** processes)
 
 void start_simulation(cpu_t* cpu)
 {
-	// testing print queue
-	for(int i = 0; i < MAX_PROCESSES; i++)
-		push(cpu->highPriorityQueue, cpu->processes[i]);
-	print_queue(cpu->highPriorityQueue);
-	
-	
 	
 	while(all_process_has_finished(cpu->processes) == FALSE && cpu->currentCycle < MAX_CYCLES)
 	{
-		cpu->currentCycle++;
 		printf("Current Cycle: %d\n", cpu->currentCycle);
 		
-		// todo: process logic
+		// check if is there any process to be executed
+		process_t* nextProcess = get_next_process_to_be_executed(cpu);
+		if(nextProcess != NULL){
+			nextProcess->status = RUNNING;
+			nextProcess->missingCyclesToFinish--;
+			nextProcess->quantumCounter++;
+			printf("Process with PID %d is now running\n", nextProcess->pid);
+			cpu->currentProcess = nextProcess;
+		}
 		
-		// todo: round robin
-		//sleep(1);
+		// loop over all processes
+		for(int i = 0; i < MAX_PROCESSES; i++){
+			
+			// check arrival time of new processes to insert them on high priority queue
+			if(cpu->processes[i]->arrivalTime == cpu->currentCycle){
+				push(cpu->highPriorityQueue, cpu->processes[i]);
+				printf("Process with PID %d was added to high priority queue\n", cpu->processes[i]->pid);
+				cpu->processes[i]->status = READY;
+			}
+			
+			
+			
+			
+		
+		}
+		
+		// sleeping for debug proposes
+		sleep(1);
+		
+		// increment cycle counter
+		cpu->currentCycle++;
+		printf("\n");
 	}
 	
 	printf("Simulation finished\n");

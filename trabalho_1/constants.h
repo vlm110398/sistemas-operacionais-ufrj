@@ -3,8 +3,8 @@
 
 #define QUANTUM 5
 
-#define MAX_PROCESSES 5
-#define MAX_ARRIVAL_TIME 15
+#define MAX_PROCESSES 3
+#define MAX_ARRIVAL_TIME 10
 #define MAX_BURST_TIME 10
 #define MAX_CYCLES 50
 

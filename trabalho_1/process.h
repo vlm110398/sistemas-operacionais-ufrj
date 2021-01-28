@@ -8,15 +8,20 @@
 
 typedef struct
 {
+	// ----- Information about process -----
     int pid;				// process id
     int ppid;				// parent process id
-    PROCESS_STATUS status;	// process current status
+	io_t* io;				// io operation of process
     int arrivalTime;		// arrival time
     int burstTime;			// burst time
-	int quantumCounter;     // slice time counter
-	int beginTime;			// current round robin starting time
-	int endTime;  			// current round robin finishing time
-	io_t* io;				// io operation of process
+	
+	// ----- Auxiliar variables -----
+	PROCESS_STATUS status;		// process current status
+	int quantumCounter;     	// slice time counter
+	int missingCyclesToFinish;	// missing time to process finishing
+	int beginTime;				// current round robin starting time
+	int endTime;  				// current round robin finishing time
+	
 	
 } process_t;
 

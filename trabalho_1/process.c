@@ -10,8 +10,11 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 	p->status = NOT_STARTED;
 	p->arrivalTime = arrival;
 	p->burstTime = burst;
+	p->missingCyclesToFinish = burst;
 	p->quantumCounter = 0;
 	p->io = init_random_io();
+	p->beginTime = 0;
+	p->endTime = 0;
 	
 	if(parent != NULL)
 		p->ppid = parent->pid;
@@ -34,14 +37,14 @@ process_t** init_random_processes(int processNumber)
 
 void print_process(process_t* process)
 {
-	printf("PID:%d ", process->pid);
-	printf("PPID:%d ", process->ppid);
-	printf("Status:%s ", get_string_from_process_status(process->status));
-	printf("ArrivalTime:%d ", process->arrivalTime);
-	printf("BurstTime:%d ", process->burstTime);
-	printf("IO Type:%d ", process->io->type);
-	printf("Crrt Begin Time:%d ", process->beginTime);
-	printf("Crrt End Time:%d\n", process->endTime);
+	printf("PID: %d\t", process->pid);
+	printf("PPID: %d\t", process->ppid);
+	printf("Status: %s\t", get_string_from_process_status(process->status));
+	printf("ArrivalTime: %d\t", process->arrivalTime);
+	printf("BurstTime: %d\t", process->burstTime);
+	printf("IO Type: %d\t", process->io->type);
+	printf("Crrt Begin Time: %d\t", process->beginTime);
+	printf("Crrt End Time: %d\n\n", process->endTime);
 }
 
 void print_processes(process_t** processes, int size)

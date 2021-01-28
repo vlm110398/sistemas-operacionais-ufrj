@@ -62,7 +62,9 @@ Queue - Estrutura de dados de fila
 - metodo para detectar novo processo a ser executado (atualizar variavel crrtProcess da cpu e atualizar status)
 
 
-- mudar nome cpu para scheduler ?
+- mudar nome cpu para scheduler
+
+- metodo io type para string
 
 
 
