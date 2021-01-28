@@ -23,22 +23,22 @@ Queue - estrutura de dados de fila
 
 - Ordem de entrada
 	- Processos novos: fila de alta prioridade
-	- Processos voltando do io: depende do io
+	- Processos voltando do io para fila de execução: depende do io
 	- Processos que sofreram preempção: fila de baixa prioridade
 
 	
 - 2 Filas de prioridade para execução dos processos (round robin)
 
-- 1 fila para execução de io (round robin)
+- 3 filas para execução de io (FCFS)
+
+- mesmo quantum para filas de processos
 	
 
 ### TODO
 
-- inicializar N processos com tempo de serviço e duração de io aleatorios
-- 2 filas pra cpu (low e high priority)
-- 3 filas para io
-- oque deve ser feito a cada ciclo?
-- metodo para inserir processo de volta do io na fila de prioridade
+- oque deve ser feito a cada ciclo
+	- checar todos processos finalizaram
+	- processos voltando de io (voltar pra fila)
 
 
 

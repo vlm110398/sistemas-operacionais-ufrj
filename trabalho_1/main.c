@@ -1,19 +1,28 @@
-#include<stdio.h>
 
+#include <stdio.h>
+#include <time.h>
 #include "constants.h"
 #include "queue.h"
+#include "cpu.h"
 
 int main(){
+	
+	// default seed
+	srand(1);
+	
+	process_t** allProcesses = init_random_processes(MAX_PROCESSES);
 
-    queue_t * q  = init_queue(LOW_PRIORITY_QUEUE);
- 
-    process_t * proc1 = init_process(0, 0, NULL);
-    process_t * proc2 = init_process(1, 1, proc1);
-
-    push(q, (void*)proc1, PROCESS_ELEMENT);
-    push(q, (void*)proc2, PROCESS_ELEMENT);
-    pop(q);
-    pop(q);
+	cpu_t* cpu = init_cpu(allProcesses);
+	
+	while(all_process_has_finished() == FALSE)
+	{
+		cpu->currentCycle++;
+		printf("Current Cycle: %d", cpu->currentCycle);
+		
+		// todo: process logic
+		
+		// todo: round robin
+	}
 
     return 0;
 }

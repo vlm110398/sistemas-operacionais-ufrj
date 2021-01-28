@@ -11,10 +11,22 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 	p->arrivalTime = arrival;
 	p->burstTime = burst;
 	p->quantumCounter = 0;
-	p->io = (io_t*) malloc(sizeof(io_t));
+	p->io = init_random_io();
 	
 	if(parent != NULL)
 		p->ppid = parent->pid;
     
     return p;
+}
+
+process_t** init_random_processes(int processNumber)
+{
+	process_t** processes = malloc(processNumber * sizeof(process_t));
+	
+	for(int i = 0; i < processNumber; i++)
+	{
+		processes[i] = init_process(rand() % MAX_ARRIVAL_TIME, rand() % MAX_BURST_TIME, NULL);
+	}
+	
+	return processes;
 }

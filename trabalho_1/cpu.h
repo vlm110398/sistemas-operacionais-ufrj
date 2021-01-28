@@ -12,14 +12,22 @@ typedef struct {
 	int currentCycle;
 	
 	process_t* currentProcess;
+	process_t** processes;
 	
 	queue_t* lowPriorityQueue;
 	queue_t* highPriorityQueue;
-	queue_t* ioQueue;
-	queue_t* readyQueue;
+	
+	queue_t* ioDiskQueue;
+	queue_t* ioPrinterQueue;
+	queue_t* ioMagneticTapeQueue;
 	
 } cpu_t;
 
+// initializes cpu struct
+cpu_t* init_cpu(process_t** processes);
+
+// check all processes are at finished status
+bool all_process_has_finished();
 
 
 #endif

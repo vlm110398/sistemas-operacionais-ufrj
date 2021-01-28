@@ -12,10 +12,13 @@ typedef struct {
     int arrivalTime;		// arrival time
     int burstTime;			// burst time
 	int quantumCounter;     // slice time counter
-	io_t* io;				// io of process
+	io_t* io;				// io operation of process
 } process_t;
 
 // initialize a process
 process_t* init_process(int arrival, int burst, process_t* parent);
+
+// initialize N random processes
+process_t** init_random_processes(int processNumber);
 
 #endif
