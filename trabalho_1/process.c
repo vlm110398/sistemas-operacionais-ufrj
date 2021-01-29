@@ -29,7 +29,7 @@ process_t** init_random_processes(int processNumber)
 	
 	for(int i = 0; i < processNumber; i++)
 	{
-		processes[i] = init_process(rand() % MAX_ARRIVAL_TIME, rand() % MAX_BURST_TIME, NULL);
+		processes[i] = init_process(rand() % (MAX_ARRIVAL_TIME-1) + 1, rand() % (MAX_BURST_TIME-1) + 1, NULL);
 	}
 	
 	return processes;
