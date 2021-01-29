@@ -53,7 +53,30 @@ void start_simulation(cpu_t* cpu)
 				push(cpu->highPriorityQueue, cpu->processes[i]);
 				printf("Process with PID %d was added to high priority queue\n", cpu->processes[i]->pid);
 				cpu->processes[i]->status = READY;
-			}			
+			}	
+			
+			// when the process is inserted in your respective IO queue 
+			if(cpu->processes[i]->arrivalTime + cpu->processes[i]->io->relativeStart == cpu->currentCycle ){
+				switch (cpu->processes[i]->io->type)
+				{
+				case DISK:
+					push(cpu->ioDiskQueue, cpu->processes[i]);
+					printf("Process with PID %d was added to DISK queue\n", cpu->processes[i]->pid);
+					break;
+				case MAGNETIC_TAPE:
+					push(cpu->ioMagneticTapeQueue, cpu->processes[i]);
+					printf("Process with PID %d was added to MAGNETIC TAPE queue\n", cpu->processes[i]->pid);
+					break;
+				case PRINTER:
+					push(cpu->ioPrinterQueue, cpu->processes[i]);
+					printf("Process with PID %d was added to PRINTER queue\n", cpu->processes[i]->pid);
+					break;
+				default:
+					break;
+				}
+				
+
+			}		
 		}
 		         
 		// sleeping for debug proposes
