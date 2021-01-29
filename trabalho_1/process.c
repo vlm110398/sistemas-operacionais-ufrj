@@ -41,10 +41,13 @@ void print_process(process_t* process)
 	printf("PPID: %d\t", process->ppid);
 	printf("Status: %s\t", get_string_from_process_status(process->status));
 	printf("ArrivalTime: %d\t", process->arrivalTime);
-	printf("BurstTime: %d\t", process->burstTime);
-	printf("IO Type: %d\t", process->io->type);
+	printf("BurstTime: %d\t\n", process->burstTime);
 	printf("Crrt Begin Time: %d\t", process->beginTime);
-	printf("Crrt End Time: %d\n\n", process->endTime);
+	printf("Crrt End Time: %d\n", process->endTime);
+	printf("IO Type: %d\t", process->io->type);
+	printf("IO Relative Start Time: %d\t", process->io->relativeStart);
+	printf("IO Burst Time: %d\n\n", process->io->burstTime);
+
 }
 
 void print_processes(process_t** processes, int size)

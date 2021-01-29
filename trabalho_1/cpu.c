@@ -53,14 +53,9 @@ void start_simulation(cpu_t* cpu)
 				push(cpu->highPriorityQueue, cpu->processes[i]);
 				printf("Process with PID %d was added to high priority queue\n", cpu->processes[i]->pid);
 				cpu->processes[i]->status = READY;
-			}
-			
-			
-			
-			
-		
+			}			
 		}
-		
+		         
 		// sleeping for debug proposes
 		sleep(1);
 		

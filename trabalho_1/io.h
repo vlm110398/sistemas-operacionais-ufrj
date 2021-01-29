@@ -8,6 +8,8 @@ typedef struct
 {
     int startTime;	// start time
 	int finishTime;	// finish time
+    int burstTime;         // burst time
+    int relativeStart;      // time of start relative from process start 
     IO_TYPE type;	// IO type
 	
 } io_t;
