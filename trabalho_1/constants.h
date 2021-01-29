@@ -9,7 +9,7 @@
 #define MAX_CYCLES 50
 
 #define MAX_IO_BURST_TIME 20
-#define MAX_IO_RELATIVE_START 5
+
 
 #define TRUE 1
 #define FALSE 0

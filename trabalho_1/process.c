@@ -30,6 +30,9 @@ process_t** init_random_processes(int processNumber)
 	for(int i = 0; i < processNumber; i++)
 	{
 		processes[i] = init_process(rand() % (MAX_ARRIVAL_TIME-1) + 1, rand() % (MAX_BURST_TIME-1) + 1, NULL);
+		// io relative start must be minor than your process burst time
+		processes[i]->io->relativeStart = rand() % (processes[i]->burstTime -1) + 1;
+		
 	}
 	
 	return processes;
