@@ -34,17 +34,36 @@ void start_simulation(cpu_t* cpu)
 	while(all_process_has_finished(cpu->processes) == FALSE && cpu->currentCycle < MAX_CYCLES)
 	{
 		printf("Current Cycle: %d\n", cpu->currentCycle);
-		
-		// check if is there any process to be executed
-		process_t* nextProcess = get_next_process_to_be_executed(cpu);
-		if(nextProcess != NULL){
-			nextProcess->status = RUNNING;
-			nextProcess->missingCyclesToFinish--;
-			nextProcess->quantumCounter++;
-			printf("Process with PID %d is now running\n", nextProcess->pid);
-			cpu->currentProcess = nextProcess;
+		if(cpu->currentProcess != NULL  && cpu->currentProcess->missingCyclesToFinish != 0 && cpu->currentProcess->quantumCounter % QUANTUM != 0 ){
+			cpu->currentProcess->missingCyclesToFinish--;
+			cpu->currentProcess->quantumCounter++;
+			printf("Process with PID %d is running now\n", cpu->currentProcess->pid);									
 		}
 		
+		else{
+			if(cpu->currentProcess != NULL){
+				if(cpu->currentProcess->missingCyclesToFinish == 0){
+					cpu->currentProcess->status = FINISHED;
+					printf("Process with PID %d is finished\n", cpu->currentProcess->pid);
+				}
+				else{
+					if(cpu->currentProcess->quantumCounter % QUANTUM == 0){
+						cpu->currentProcess->status = BLOCKED;
+						printf("Process with PID %d is blocked\n", cpu->currentProcess->pid);
+						push(cpu->lowPriorityQueue, cpu->currentProcess);
+					}
+				}
+			} 
+			// check if is there any process to be executed
+			process_t* nextProcess = get_next_process_to_be_executed(cpu);
+			if(nextProcess != NULL){
+				nextProcess->status = RUNNING;
+				nextProcess->missingCyclesToFinish--;
+				nextProcess->quantumCounter++;
+				printf("Process with PID %d is running now\n", nextProcess->pid);
+				cpu->currentProcess = nextProcess;
+			}
+		}
 		// loop over all processes
 		for(int i = 0; i < MAX_PROCESSES; i++){
 			
