@@ -33,18 +33,55 @@ void start_simulation(cpu_t* cpu)
 	
 	while(all_process_has_finished(cpu->processes) == FALSE && cpu->currentCycle < MAX_CYCLES)
 	{	
-		
 		printf("Current Cycle: %d\n", cpu->currentCycle);
+		if(cpu->currentProcess != NULL && (cpu->currentProcess->status == READY || cpu->currentProcess->status == RUNNING) && cpu->currentProcess->missingCyclesToFinish != 0 && cpu->currentProcess->quantumCounter % QUANTUM != 0){
+			cpu->currentProcess->missingCyclesToFinish--;
+			cpu->currentProcess->quantumCounter++;
+			printf("Process with PID %d is running now\n", cpu->currentProcess->pid);		
+		}
+		else{
+			if(cpu->currentProcess != NULL){
+				if(cpu->currentProcess->missingCyclesToFinish == 0 && cpu->currentProcess->status != FINISHED && cpu->currentProcess->alreadyOutIoQueue == TRUE){
+					cpu->currentProcess->status = FINISHED;
+					printf("Process with PID %d is finished\n", cpu->currentProcess->pid);
+					remove_process(cpu->highPriorityQueue, cpu->currentProcess);
+					remove_process(cpu->lowPriorityQueue, cpu->currentProcess);
+
+				}
+				else if(cpu->currentProcess->quantumCounter - QUANTUM == 0 && cpu->currentProcess->status == RUNNING){
+					cpu->currentProcess->status = BLOCKED;
+					cpu->currentProcess->quantumCounter = 0;
+					printf("Process with PID %d is blocked by quantum.\n", cpu->currentProcess->pid);
+					// remove if its exists in queue
+					// same effect that the pop operation
+					// because this process is the first of your respective queue
+					remove_process(cpu->highPriorityQueue, cpu->currentProcess);
+					remove_process(cpu->lowPriorityQueue, cpu->currentProcess);
+					push(cpu->lowPriorityQueue, cpu->currentProcess);
+				}
+				
+			}
+			if(cpu->currentProcess == NULL || cpu->currentProcess->status == FINISHED || cpu->currentProcess->status == BLOCKED){
+				process_t* nextProcess = get_next_process_to_be_executed(cpu);
+				if(nextProcess != NULL){
+					nextProcess->status = RUNNING;
+					nextProcess->missingCyclesToFinish--;
+					nextProcess->quantumCounter++;
+					printf("Process with PID %d is running now for %d/%d cycles\n", nextProcess->pid, nextProcess->burstTime-nextProcess->missingCyclesToFinish, nextProcess->burstTime);
+					cpu->currentProcess = nextProcess;
+				}			
+			}
+		}
+		
+
 		// loop over all processes
 		for(int i = 0; i < MAX_PROCESSES; i++){
-			
 			// check arrival time of new processes to insert them on high priority queue
 			if(cpu->processes[i]->arrivalTime == cpu->currentCycle){
 				push(cpu->highPriorityQueue, cpu->processes[i]);
 				printf("Process with PID %d was added to high priority queue\n", cpu->processes[i]->pid);
 				cpu->processes[i]->status = READY;
-			}	
-			
+			}
 			// when the process is inserted in your respective IO queue 
 			if(cpu->processes[i]->burstTime - cpu->processes[i]->missingCyclesToFinish  == cpu->processes[i]->io->relativeStart && !cpu->processes[i]->alreadyInIoQueue){
 				switch (cpu->processes[i]->io->type)
@@ -68,50 +105,9 @@ void start_simulation(cpu_t* cpu)
 						break;
 				}	
 			}
-
-		
-		}	
-
-		if(cpu->currentProcess != NULL && (cpu->currentProcess->status == READY || cpu->currentProcess->status == RUNNING) && cpu->currentProcess->missingCyclesToFinish != 0 && cpu->currentProcess->quantumCounter % QUANTUM != 0){
-			cpu->currentProcess->missingCyclesToFinish--;
-			cpu->currentProcess->quantumCounter++;
-			printf("Process with PID %d is running now\n", cpu->currentProcess->pid);		
-		}
-		else{
-			if(cpu->currentProcess != NULL){
-				if(cpu->currentProcess->missingCyclesToFinish == 0 && cpu->currentProcess->status != FINISHED && cpu->currentProcess->alreadyOutIoQueue == TRUE){
-					cpu->currentProcess->status = FINISHED;
-					printf("Process with PID %d is finished\n", cpu->currentProcess->pid);
-					remove_process(cpu->highPriorityQueue, cpu->currentProcess);
-					remove_process(cpu->lowPriorityQueue, cpu->currentProcess);
-
-				}
-				else if(cpu->currentProcess->quantumCounter % QUANTUM == 0 && cpu->currentProcess->status == RUNNING){
-					cpu->currentProcess->status = BLOCKED;
-					printf("Process with PID %d is blocked by quantum.\n", cpu->currentProcess->pid);
-					// remove if its exists in queue
-					// same effect that the pop operation
-					// because this process is the first of your respective queue
-					remove_process(cpu->highPriorityQueue, cpu->currentProcess);
-					remove_process(cpu->lowPriorityQueue, cpu->currentProcess);
-					push(cpu->lowPriorityQueue, cpu->currentProcess);
-				}
-				
-			}
-			if(cpu->currentProcess == NULL || cpu->currentProcess->status == FINISHED || cpu->currentProcess->status == BLOCKED){
-				process_t* nextProcess = get_next_process_to_be_executed(cpu);
-				if(nextProcess != NULL){
-					nextProcess->status = RUNNING;
-					nextProcess->missingCyclesToFinish--;
-					nextProcess->quantumCounter++;
-					printf("Process with PID %d is running now for %d/%d cycles\n", nextProcess->pid, nextProcess->burstTime-nextProcess->missingCyclesToFinish, nextProcess->burstTime);
-					cpu->currentProcess = nextProcess;
-				}			
-			}
-		}
-		for(int i = 0; i < MAX_PROCESSES; i++){		
 			if(cpu->ioDiskQueue->first != NULL && cpu->processes[i] == cpu->ioDiskQueue->first->process){
 				cpu->processes[i]->status = BLOCKED; 
+				cpu->processes[i]->quantumCounter = 0;
 				++cpu->processes[i]->io->usingTime;		
 				printf("Process with PID %d was blocked because:\n", cpu->processes[i]->pid);
 				printf("is using DISK for %d/%d cycles.\n", cpu->processes[i]->io->usingTime, cpu->processes[i]->io->burstTime);
@@ -119,6 +115,7 @@ void start_simulation(cpu_t* cpu)
 			else if(cpu->ioMagneticTapeQueue->first != NULL && cpu->processes[i] == cpu->ioMagneticTapeQueue->first->process){
 				cpu->processes[i]->status = BLOCKED;
 				++cpu->processes[i]->io->usingTime;
+				cpu->processes[i]->quantumCounter = 0;
 				printf("Process with PID %d was blocked because:\n", cpu->processes[i]->pid);
 				printf("is using MAGNETIC TAPE for %d/%d cycles.\n", cpu->processes[i]->io->usingTime, cpu->processes[i]->io->burstTime);
 				
@@ -126,6 +123,7 @@ void start_simulation(cpu_t* cpu)
 			else if(cpu->ioPrinterQueue->first != NULL && cpu->processes[i] == cpu->ioPrinterQueue->first->process){
 				cpu->processes[i]->status = BLOCKED;
 				++cpu->processes[i]->io->usingTime;
+				cpu->processes[i]->quantumCounter = 0;
 				printf("Process with PID %d was blocked because:\n", cpu->processes[i]->pid);
 				printf("is using PRINTER for %d/%d cycles.\n", cpu->processes[i]->io->usingTime, cpu->processes[i]->io->burstTime);
 			}
@@ -151,12 +149,19 @@ void start_simulation(cpu_t* cpu)
 					default:
 					break;
 				}
-			}	
-		}		
+			}				
+
+
+			
+
+
+		
+		}	
+
 
          
 		// sleeping for debug proposes
-		sleep(1);
+//		sleep(1);
 		
 		// increment cycle counter
 		cpu->currentCycle++;
