@@ -59,6 +59,32 @@ queue_element_t* pop(queue_t* q)
     }
 }
 
+void remove_process(queue_t * q, process_t * p){
+    if(q->first != NULL){
+        if(q->first->process == p){
+            pop(q);
+        }
+        else{
+            queue_element_t * tmpBefore = q->first;
+            while(tmpBefore->next != NULL){
+                if(tmpBefore->next->process == p ){
+                    queue_element_t * tmpCurr = tmpBefore->next;
+                    --q->length;
+                    if(tmpBefore->next->next == NULL){
+                        tmpBefore->next = NULL;
+                        free(tmpCurr);
+                    }
+                    else{
+                        tmpBefore->next = tmpBefore->next->next;
+                        free(tmpCurr);
+                    }
+                    break;
+                }
+                tmpBefore = tmpBefore->next;
+            }
+        }
+    }
+}
 
 void print_queue(queue_t* q)
 {

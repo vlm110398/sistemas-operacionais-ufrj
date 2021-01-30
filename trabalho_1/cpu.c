@@ -46,113 +46,115 @@ void start_simulation(cpu_t* cpu)
 			}	
 			
 			// when the process is inserted in your respective IO queue 
-			if(cpu->processes[i]->arrivalTime + cpu->processes[i]->io->relativeStart == cpu->currentCycle ){
+			if(cpu->processes[i]->burstTime - cpu->processes[i]->missingCyclesToFinish  == cpu->processes[i]->io->relativeStart && !cpu->processes[i]->alreadyInIoQueue){
 				switch (cpu->processes[i]->io->type)
 				{
 					case DISK:
 						push(cpu->ioDiskQueue, cpu->processes[i]);
+						cpu->processes[i]->alreadyInIoQueue = TRUE;
 						printf("Process with PID %d was added to DISK queue\n", cpu->processes[i]->pid);
 						break;
 					case MAGNETIC_TAPE:
 						push(cpu->ioMagneticTapeQueue, cpu->processes[i]);
+						cpu->processes[i]->alreadyInIoQueue = TRUE;
 						printf("Process with PID %d was added to MAGNETIC TAPE queue\n", cpu->processes[i]->pid);
 						break;
 					case PRINTER:
 						push(cpu->ioPrinterQueue, cpu->processes[i]);
+						cpu->processes[i]->alreadyInIoQueue = TRUE;
 						printf("Process with PID %d was added to PRINTER queue\n", cpu->processes[i]->pid);
 						break;
 					default:
 						break;
+				}	
+			}
+
+		
+		}	
+
+		if(cpu->currentProcess != NULL && (cpu->currentProcess->status == READY || cpu->currentProcess->status == RUNNING) && cpu->currentProcess->missingCyclesToFinish != 0 && cpu->currentProcess->quantumCounter % QUANTUM != 0){
+			cpu->currentProcess->missingCyclesToFinish--;
+			cpu->currentProcess->quantumCounter++;
+			printf("Process with PID %d is running now\n", cpu->currentProcess->pid);		
+		}
+		else{
+			if(cpu->currentProcess != NULL){
+				if(cpu->currentProcess->missingCyclesToFinish == 0 && cpu->currentProcess->status != FINISHED && cpu->currentProcess->alreadyOutIoQueue == TRUE){
+					cpu->currentProcess->status = FINISHED;
+					printf("Process with PID %d is finished\n", cpu->currentProcess->pid);
+					remove_process(cpu->highPriorityQueue, cpu->currentProcess);
+					remove_process(cpu->lowPriorityQueue, cpu->currentProcess);
+
+				}
+				else if(cpu->currentProcess->quantumCounter % QUANTUM == 0 && cpu->currentProcess->status == RUNNING){
+					cpu->currentProcess->status = BLOCKED;
+					printf("Process with PID %d is blocked by quantum.\n", cpu->currentProcess->pid);
+					// remove if its exists in queue
+					// same effect that the pop operation
+					// because this process is the first of your respective queue
+					remove_process(cpu->highPriorityQueue, cpu->currentProcess);
+					remove_process(cpu->lowPriorityQueue, cpu->currentProcess);
+					push(cpu->lowPriorityQueue, cpu->currentProcess);
 				}
 				
-
 			}
-/*			
-			// remove from IO queue
-			if(cpu->processes[i]->io->usingTime == cpu->processes[i]->io->burstTime){
-				cpu->processes[i]->status = RUNNING;
-				switch(cpu->processes[i]->io->type){
-					case DISK:
-					pop(cpu->ioDiskQueue);
-					break;
-
-					case MAGNETIC_TAPE:
-					pop(cpu->ioMagneticTapeQueue);
-					break;
-					
-					case PRINTER:
-					pop(cpu->ioPrinterQueue);
-					break;
-
-					default:
-					break;
-				}
+			if(cpu->currentProcess == NULL || cpu->currentProcess->status == FINISHED || cpu->currentProcess->status == BLOCKED){
+				process_t* nextProcess = get_next_process_to_be_executed(cpu);
+				if(nextProcess != NULL){
+					nextProcess->status = RUNNING;
+					nextProcess->missingCyclesToFinish--;
+					nextProcess->quantumCounter++;
+					printf("Process with PID %d is running now for %d/%d cycles\n", nextProcess->pid, nextProcess->burstTime-nextProcess->missingCyclesToFinish, nextProcess->burstTime);
+					cpu->currentProcess = nextProcess;
+				}			
 			}
-*/
 		}
-		//another check loop because an I / O queue may have had a process removed 
-		//after passing the loop to another new process in the queue
-		for(int i = 0; i < MAX_PROCESSES; i++){
+		for(int i = 0; i < MAX_PROCESSES; i++){		
 			if(cpu->ioDiskQueue->first != NULL && cpu->processes[i] == cpu->ioDiskQueue->first->process){
 				cpu->processes[i]->status = BLOCKED; 
-				++cpu->processes[i]->io->usingTime;
-				printf("Process with PID %d is using DISK for %d cycles.\n", cpu->processes[i]->pid, cpu->processes[i]->io->usingTime);
-				
+				++cpu->processes[i]->io->usingTime;		
+				printf("Process with PID %d was blocked because:\n", cpu->processes[i]->pid);
+				printf("is using DISK for %d/%d cycles.\n", cpu->processes[i]->io->usingTime, cpu->processes[i]->io->burstTime);
 			}
 			else if(cpu->ioMagneticTapeQueue->first != NULL && cpu->processes[i] == cpu->ioMagneticTapeQueue->first->process){
 				cpu->processes[i]->status = BLOCKED;
 				++cpu->processes[i]->io->usingTime;
-				printf("Process with PID %d is using MAGNETIC TAPE for %d cycles.\n", cpu->processes[i]->pid, cpu->processes[i]->io->usingTime);
+				printf("Process with PID %d was blocked because:\n", cpu->processes[i]->pid);
+				printf("is using MAGNETIC TAPE for %d/%d cycles.\n", cpu->processes[i]->io->usingTime, cpu->processes[i]->io->burstTime);
 				
 			}
 			else if(cpu->ioPrinterQueue->first != NULL && cpu->processes[i] == cpu->ioPrinterQueue->first->process){
 				cpu->processes[i]->status = BLOCKED;
 				++cpu->processes[i]->io->usingTime;
-				printf("Process with PID %d is using PRINTER for %d cycles.\n", cpu->processes[i]->pid, cpu->processes[i]->io->usingTime);
+				printf("Process with PID %d was blocked because:\n", cpu->processes[i]->pid);
+				printf("is using PRINTER for %d/%d cycles.\n", cpu->processes[i]->io->usingTime, cpu->processes[i]->io->burstTime);
 			}
-		}
+			// remove from IO queue
+			if(cpu->processes[i]->io->usingTime == cpu->processes[i]->io->burstTime && !cpu->processes[i]->alreadyOutIoQueue){
+				cpu->processes[i]->status = RUNNING;
+				cpu->processes[i]->alreadyOutIoQueue = TRUE;
+				switch(cpu->processes[i]->io->type){
+					case DISK:
+					pop(cpu->ioDiskQueue);
+					push(cpu->lowPriorityQueue,cpu->processes[i]);
+					break;
 
-		if(cpu->currentProcess != NULL  && cpu->currentProcess->missingCyclesToFinish != 0 && cpu->currentProcess->quantumCounter % QUANTUM != 0){
-			cpu->currentProcess->missingCyclesToFinish--;
-			cpu->currentProcess->quantumCounter++;
-			printf("Process with PID %d is running now\n", cpu->currentProcess->pid);									
-		}
-		
-		else{
-			if(cpu->currentProcess != NULL){
-				if(cpu->currentProcess->missingCyclesToFinish == 0){
-					cpu->currentProcess->status = FINISHED;
-					/*
-					if(cpu->highPriorityQueue->first->process == cpu->currentProcess){
-						pop(cpu->highPriorityQueue);
-					}
-					else if(cpu->lowPriorityQueue->first->process == cpu->currentProcess){
-						pop(cpu->lowPriorityQueue);
-					}
-					*/
-					printf("Process with PID %d is finished\n", cpu->currentProcess->pid);
+					case MAGNETIC_TAPE:
+					pop(cpu->ioMagneticTapeQueue);
+					push(cpu->highPriorityQueue,cpu->processes[i]);
+					break;
+					
+					case PRINTER:
+					pop(cpu->ioPrinterQueue);
+					push(cpu->highPriorityQueue,cpu->processes[i]);
+					break;
+					default:
+					break;
 				}
-				else{
-					cpu->currentProcess->status = BLOCKED;
-					printf("Process with PID %d is blocked\n", cpu->currentProcess->pid);
-					if(cpu->currentProcess->quantumCounter % QUANTUM == 0){
-						push(cpu->lowPriorityQueue, cpu->currentProcess);
-					}
+			}	
+		}		
 
-				}
-			} 
-			// check if is there any process to be executed
-			process_t* nextProcess = get_next_process_to_be_executed(cpu);
-			if(nextProcess != NULL){
-				nextProcess->status = RUNNING;
-				nextProcess->missingCyclesToFinish--;
-				nextProcess->quantumCounter++;
-				printf("Process with PID %d is running now\n", nextProcess->pid);
-				cpu->currentProcess = nextProcess;
-			}
-		}
-
-		         
+         
 		// sleeping for debug proposes
 		sleep(1);
 		

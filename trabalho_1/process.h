@@ -21,7 +21,8 @@ typedef struct
 	int missingCyclesToFinish;	// missing time to process finishing
 	int beginTime;				// current round robin starting time
 	int endTime;  				// current round robin finishing time
-	
+	bool alreadyInIoQueue;      // the process has already been in IO queue?
+	bool alreadyOutIoQueue;		// the process has already been out IO queue?
 	
 } process_t;
 

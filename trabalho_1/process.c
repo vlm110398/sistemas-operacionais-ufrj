@@ -15,7 +15,8 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 	p->io = init_random_io();
 	p->beginTime = 0;
 	p->endTime = 0;
-	
+	p->alreadyInIoQueue = FALSE;
+	p->alreadyOutIoQueue = FALSE;
 	if(parent != NULL)
 		p->ppid = parent->pid;
 	else p->ppid = -1; // -1 means process has no parent
@@ -29,9 +30,9 @@ process_t** init_random_processes(int processNumber)
 	
 	for(int i = 0; i < processNumber; i++)
 	{
-		processes[i] = init_process(rand() % (MAX_ARRIVAL_TIME-1) + 1, rand() % (MAX_BURST_TIME-1) + 1, NULL);
+		processes[i] = init_process(rand() % (MAX_ARRIVAL_TIME) + 1, rand() % (MAX_BURST_TIME) + 1, NULL);
 		// io relative start must be minor than your process burst time
-		processes[i]->io->relativeStart = rand() % (processes[i]->burstTime -1) + 1;
+		processes[i]->io->relativeStart = rand() % (processes[i]->burstTime) + 1;
 		
 	}
 	
