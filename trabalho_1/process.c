@@ -13,10 +13,7 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 	p->missingCyclesToFinish = burst;
 	p->quantumCounter = 0;
 	p->io = init_random_io();
-	p->beginTime = 0;
-	p->endTime = 0;
-	p->alreadyInIoQueue = FALSE;
-	p->alreadyOutIoQueue = FALSE;
+	
 	if(parent != NULL)
 		p->ppid = parent->pid;
 	else p->ppid = -1; // -1 means process has no parent
@@ -26,14 +23,13 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 
 process_t** init_random_processes(int processNumber)
 {
-	process_t** processes = malloc(processNumber * sizeof(process_t));
+	process_t** processes = malloc(processNumber * sizeof(process_t*));
 	
 	for(int i = 0; i < processNumber; i++)
 	{
-		processes[i] = init_process(rand() % (MAX_ARRIVAL_TIME) + 1, rand() % (MAX_BURST_TIME) + 1, NULL);
-		// io relative start must be minor than your process burst time
-		processes[i]->io->relativeStart = rand() % (processes[i]->burstTime) + 1;
-		
+		processes[i] = init_process((rand() % MAX_ARRIVAL_TIME) + 1, (rand() % MAX_BURST_TIME) + 1, NULL);
+		// defining io relative start (must be minor than process burst time and higher than zero)
+		processes[i]->io->relativeStart = (rand() % processes[i]->burstTime) + 1;
 	}
 	
 	return processes;
@@ -41,17 +37,15 @@ process_t** init_random_processes(int processNumber)
 
 void print_process(process_t* process)
 {
-	printf("PID: %d\t", process->pid);
-	printf("PPID: %d\t", process->ppid);
-	printf("Status: %s\t", get_string_from_process_status(process->status));
-	printf("ArrivalTime: %d\t", process->arrivalTime);
-	printf("BurstTime: %d\t\n", process->burstTime);
-	printf("Crrt Begin Time: %d\t", process->beginTime);
-	printf("Crrt End Time: %d\n", process->endTime);
-	printf("IO Type: %d\t", process->io->type);
-	printf("IO Relative Start Time: %d\t", process->io->relativeStart);
-	printf("IO Burst Time: %d\n\n", process->io->burstTime);
-
+	printf("PID: %d ", process->pid);
+	printf("PPID: %d ", process->ppid);
+	printf("Status: %s\t", get_string_from_execution_status(process->status));
+	printf("ArrivalTime: %d ", process->arrivalTime);
+	printf("BurstTime: %d ", process->burstTime);
+	printf("IO Relative Start Time: %d ", process->io->relativeStart);
+	printf("IO Burst Time: %d ", process->io->burstTime);
+	printf("IO Status: %s\t", get_string_from_execution_status(process->io->status));
+	printf("IO Type: %s\n", get_string_from_io_type(process->io->type));
 }
 
 void print_processes(process_t** processes, int size)
@@ -62,7 +56,7 @@ void print_processes(process_t** processes, int size)
 	}
 }
 
-char* get_string_from_process_status(PROCESS_STATUS status)
+char* get_string_from_execution_status(EXECUTION_STATUS status)
 {
 	switch(status)
 	{

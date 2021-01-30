@@ -16,13 +16,9 @@ typedef struct
     int burstTime;			// burst time
 	
 	// ----- Auxiliar variables -----
-	PROCESS_STATUS status;		// process current status
+	EXECUTION_STATUS status;	// process current status
 	int quantumCounter;     	// slice time counter
 	int missingCyclesToFinish;	// missing time to process finishing
-	int beginTime;				// current round robin starting time
-	int endTime;  				// current round robin finishing time
-	bool alreadyInIoQueue;      // the process has already been in IO queue?
-	bool alreadyOutIoQueue;		// the process has already been out IO queue?
 	
 } process_t;
 
@@ -39,6 +35,6 @@ void print_process(process_t* process);
 void print_processes(process_t** processes, int size);
 
 // get process current state as string
-char* get_string_from_process_status(PROCESS_STATUS status);
+char* get_string_from_execution_status(EXECUTION_STATUS status);
 
 #endif

@@ -14,6 +14,7 @@ int main(){
 	process_t** allProcesses = init_random_processes(MAX_PROCESSES);
 	printf("Created processes:\n");
 	print_processes(allProcesses, MAX_PROCESSES);
+	printf("\n");
 
 	cpu_t* cpu = init_cpu(allProcesses);
 	start_simulation(cpu);

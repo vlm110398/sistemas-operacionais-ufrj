@@ -26,6 +26,8 @@ Queue - Estrutura de dados de fila
 
 - 3 filas para execução de IO utilizando estratégia FCFS (uma fila para cada tipo de IO)
 
+- Tempo de serviço de IO definido aleatoriamente no momento da criação de seu processo pai
+
 - Número de processos definido estaticamente no arquivo constants.h
 
 - Valores de tempo de chegada e tempo de serviço aleatórios para cada processo
@@ -38,7 +40,7 @@ Queue - Estrutura de dados de fila
 
 
 
-
+### Ordem de execução da simulação
 	
 
 ### TODO

@@ -1,15 +1,13 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define QUANTUM 5
+#define QUANTUM 2
 
 #define MAX_PROCESSES 3
-#define MAX_ARRIVAL_TIME 10
-#define MAX_BURST_TIME 10
-#define MAX_CYCLES 50
-
-#define MAX_IO_BURST_TIME 20
-
+#define MAX_ARRIVAL_TIME 3
+#define MAX_BURST_TIME 5
+#define MAX_CYCLES 500 // avoid infinity loop
+#define MAX_IO_BURST_TIME 4
 
 #define TRUE 1
 #define FALSE 0
@@ -22,15 +20,15 @@ typedef enum
 	BLOCKED,			// bloqueado devido io ou preempcao
 	RUNNING,			// executando
 	FINISHED,			// finalizado
-	PROCESS_STATUS_NUMBER
+	EXECUTION_STATUS_NUMBER
 	
-} PROCESS_STATUS;
+} EXECUTION_STATUS;
 
 typedef enum
 {
-    DISK = 0,			// vai pra fila de baixa prioridade (definida duracao de 5 tempos)
-	MAGNETIC_TAPE,		// vai pra fila de alta prioridade (definida duracao de 7 tempos)
-	PRINTER,			// vai pra fila de alta prioridade (definida duracao de 9 tempos)
+    DISK = 0,			// vai pra fila de baixa prioridade
+	MAGNETIC_TAPE,		// vai pra fila de alta prioridade
+	PRINTER,			// vai pra fila de alta prioridade
 	IO_TYPE_NUMBER
 	
 } IO_TYPE;

@@ -38,6 +38,11 @@ void print_queue(queue_t* q);
 // initialize queue element with desired process
 queue_element_t* init_queue_element(process_t* process);
 
+// return first element from queue without removing it
+queue_element_t* front(queue_t* q);
 
+// remove desired process from desired queue
 void remove_process(queue_t * q, process_t * p);
+
+
 #endif

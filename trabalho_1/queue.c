@@ -22,7 +22,7 @@ void push(queue_t* q, process_t* process)
 	// creating queue element
 	queue_element_t* e = init_queue_element(process);
     
-	// inserting on the queue
+	// inserting on the end of the queue
     if(q->first != NULL){
         queue_element_t* crrtElement = q->first;
         while(crrtElement->next != NULL) crrtElement = crrtElement->next; 
@@ -59,7 +59,19 @@ queue_element_t* pop(queue_t* q)
     }
 }
 
-void remove_process(queue_t * q, process_t * p){
+queue_element_t* front(queue_t* q)
+{
+	// checking queue is empty
+    if(q->first == NULL){
+        //printf("This queue is empty\n");
+        return NULL;
+    }
+    else return q->first; 
+}
+
+
+void remove_process(queue_t* q, process_t* p)
+{
     if(q->first != NULL){
         if(q->first->process == p){
             pop(q);
