@@ -1,13 +1,13 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define QUANTUM 4
+#define QUANTUM 3
 
-#define MAX_PROCESSES 5
-#define MAX_ARRIVAL_TIME 3
-#define MAX_BURST_TIME 4
+#define MAX_PROCESSES 7
+#define MAX_ARRIVAL_TIME 7
+#define MAX_BURST_TIME 6
 #define MAX_CYCLES 1000 // avoid infinity loop
-#define MAX_IO_BURST_TIME 4
+#define MAX_IO_BURST_TIME 6
 
 #define TRUE 1
 #define FALSE 0

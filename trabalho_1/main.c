@@ -10,6 +10,7 @@ int main(){
 	
 	// default seed
 	srand(1);
+	//srand(time(NULL));
 	
 	process_t** allProcesses = init_random_processes(MAX_PROCESSES);
 	printf("Quantum: %d\n", QUANTUM);

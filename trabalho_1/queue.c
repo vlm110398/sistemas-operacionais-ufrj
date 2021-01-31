@@ -36,12 +36,12 @@ void push(queue_t* q, process_t* process)
 }
 
 
-queue_element_t* pop(queue_t* q)
+void pop(queue_t* q)
 {
 	// checking queue is empty
     if(q->first == NULL){
-        printf("This queue is empty\n");
-        return NULL;
+        //printf("This queue is empty\n");
+        return;
     }
 	// updating queue
     else{
@@ -55,8 +55,23 @@ queue_element_t* pop(queue_t* q)
 		// decrements queue size
 		q->length--;
 		
-		return first;     
+		// freeing queue_element_t
+		free(first);    
     }
+}
+
+void free_queue(queue_t* q)
+{
+	if(q->first == NULL) return;
+	
+	queue_element_t *crrt = q->first, *old;
+	while(crrt->next != NULL)
+	{
+		old = crrt;
+		crrt = crrt->next;
+		free(old);
+	}
+	free(crrt);
 }
 
 queue_element_t* front(queue_t* q)

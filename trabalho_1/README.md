@@ -63,25 +63,5 @@ Queue - Estrutura de dados de fila
 	- mostra o estado de todas as fila ao final dessa iteração
 - mostra resultados da simulação
 - Liberação da memória alocada
-	
-
-### TODO
-
-
-	metodos:
-		advance to next process
-		handle finished process
-		
-	handle finished process quando finalizar io?
-	
-	while na hora de verificar missingcyclestofinish?
-	
-	mudar nome cpu para scheduler?
-
-	metodo free all memory
-
-
-
-
 
 

@@ -62,4 +62,10 @@ bool check_only_one_process_is_being_executed(cpu_t* cpu);
 // show simulation results
 void print_results(process_t** processes);
 
+// free all allocated memory for simulation
+void free_all_memory(cpu_t* cpu);
+
+// checks if process is finished and handle it
+void handle_finished_process(cpu_t* cpu, process_t* process);
+
 #endif

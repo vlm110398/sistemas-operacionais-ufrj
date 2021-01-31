@@ -71,6 +71,8 @@ void start_simulation(cpu_t* cpu)
 	printf("Simulation finished\n\n");
 	
 	print_results(cpu->processes);
+	
+	free_all_memory(cpu);
 }
 
 
@@ -124,15 +126,7 @@ void execute_process(cpu_t* cpu)
 			 process->status != FINISHED && //  not handled status
 			 process->io->status == FINISHED) // io operation is finished
 	{
-		process->status = FINISHED;
-		process->finishedTime = cpu->currentCycle;
-		printf("Process with PID %d finished\n", process->pid);
-		
-		// removing from queues
-		remove_process_from_priority_queues(cpu, process);
-		
-		// reseting quantum
-		process->quantumCounter = 0;
+		handle_finished_process(cpu, process);
 		
 		// execute next process on the same cycle that previous process was finished
 		process_t* nextProcess = get_next_process_to_be_executed(cpu);
@@ -215,33 +209,48 @@ void manage_process_back_from_io(cpu_t* cpu, queue_t* queue)
 	if(	process->io->usingTime == process->io->burstTime &&
 		process->io->status != FINISHED)
 	{
-		process->status = READY;
 		process->io->status = FINISHED;
 		process->io->finishTime = cpu->currentCycle;
 		
-		// move process from io queue to priority queue
-		switch(process->io->type)
+		// checking process has finished
+		if( process->missingCyclesToFinish == 0 && // no more cycles to execute
+			process->status != FINISHED && //  not handled status
+			process->io->status == FINISHED) // io operation is finished
 		{
-			case DISK:
-				pop(cpu->ioDiskQueue);
-				push(cpu->lowPriorityQueue, process); // from disk io to low priority queue
-				printf("Process with PID %d moved from disk io queue to low priority queue\n", process->pid);
-				break;
-	
-			case MAGNETIC_TAPE:
-				pop(cpu->ioMagneticTapeQueue);
-				push(cpu->highPriorityQueue, process); // from magnetic tape io to high priority queue
-				printf("Process with PID %d moved from magnetic tape io queue to high priority queue\n", process->pid);
-				break;
-			
-			case PRINTER:
-				pop(cpu->ioPrinterQueue);
-				push(cpu->highPriorityQueue, process); // from printer io to high priority queue
-				printf("Process with PID %d moved from printer io queue to high priority queue\n", process->pid);
-				break;
+			// handle status
+			handle_finished_process(cpu, process);
+			// remove from current io queue
+			pop(queue);
+		}
+		// process is not finished, so we move it to priority queue according to io type
+		else
+		{
+			process->status = READY;
+		
+			// move process from io queue to priority queue
+			switch(process->io->type)
+			{
+				case DISK:
+					pop(cpu->ioDiskQueue);
+					push(cpu->lowPriorityQueue, process); // from disk io to low priority queue
+					printf("Process with PID %d moved from disk io queue to low priority queue\n", process->pid);
+					break;
+		
+				case MAGNETIC_TAPE:
+					pop(cpu->ioMagneticTapeQueue);
+					push(cpu->highPriorityQueue, process); // from magnetic tape io to high priority queue
+					printf("Process with PID %d moved from magnetic tape io queue to high priority queue\n", process->pid);
+					break;
 				
-			default: break;
-			
+				case PRINTER:
+					pop(cpu->ioPrinterQueue);
+					push(cpu->highPriorityQueue, process); // from printer io to high priority queue
+					printf("Process with PID %d moved from printer io queue to high priority queue\n", process->pid);
+					break;
+					
+				default: break;
+				
+			}
 		}
 	}
 }
@@ -289,17 +298,17 @@ void check_process_is_starting_io(cpu_t* cpu, process_t* process)
 		{
 			case DISK:
 				push(cpu->ioDiskQueue, process);
-				printf("Process with PID %d was blocked due to IO (added to disk queue)\n", process->pid);
+				printf("Process with PID %d was blocked due to IO (moved to disk queue)\n", process->pid);
 				break;
 			
 			case MAGNETIC_TAPE:
 				push(cpu->ioMagneticTapeQueue, process);
-				printf("Process with PID %d was blocked due to IO (added to magnetic tape queue)\n", process->pid);
+				printf("Process with PID %d was blocked due to IO (moved to magnetic tape queue)\n", process->pid);
 				break;
 				
 			case PRINTER:
 				push(cpu->ioPrinterQueue, process);
-				printf("Process with PID %d was blocked due to IO (added to printer queue)\n", process->pid);
+				printf("Process with PID %d was blocked due to IO (moved to printer queue)\n", process->pid);
 				break;
 			
 			default:
@@ -345,6 +354,38 @@ void print_results(process_t** processes)
 	}
 }
 
+void free_all_memory(cpu_t* cpu)
+{
+	// processes
+	for(int i = 0; i < MAX_PROCESSES; i++)
+	{
+		process_t* p = cpu->processes[i];
+		free(p->io);
+		free(p);
+	}
+	free(cpu->processes);
+	
+	// queues
+	free_queue(cpu->highPriorityQueue);
+	free_queue(cpu->lowPriorityQueue);
+	free_queue(cpu->ioDiskQueue);
+	free_queue(cpu->ioMagneticTapeQueue);
+	free_queue(cpu->ioPrinterQueue);
+	
+	// cpu
+	free(cpu);
+}
 
-
+void handle_finished_process(cpu_t* cpu, process_t* process)
+{
+	process->status = FINISHED;
+	process->finishedTime = cpu->currentCycle;
+	printf("Process with PID %d finished\n", process->pid);
+		
+	// removing from queues
+	remove_process_from_priority_queues(cpu, process);
+		
+	// reseting quantum
+	process->quantumCounter = 0;
+}
 
