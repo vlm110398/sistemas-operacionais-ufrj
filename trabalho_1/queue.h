@@ -30,7 +30,7 @@ queue_t * init_queue(QUEUE_TYPE queueType);
 void push(queue_t* q, process_t* process);
 
 // pop and return first element from queue
-queue_element_t* pop(queue_t* q);
+void pop(queue_t* q);
 
 // print desired queue content
 void print_queue(queue_t* q);
@@ -38,6 +38,14 @@ void print_queue(queue_t* q);
 // initialize queue element with desired process
 queue_element_t* init_queue_element(process_t* process);
 
+// return first element from queue without removing it
+queue_element_t* front(queue_t* q);
 
+// remove desired process from desired queue
 void remove_process(queue_t * q, process_t * p);
+
+// free queue memory
+void free_queue(queue_t* q);
+
+
 #endif
