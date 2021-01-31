@@ -37,36 +37,49 @@ Queue - Estrutura de dados de fila
 	- Processos voltando do IO: fila de baixa prioridade para disco e alta prioridade para impressora e fita magnética
 	- Processos que sofreram preempção: fila de baixa prioridade
 	
+- Após finalizar IO processo retorna para fila de prioridades (de acordo com tipo de IO) para ser executado na próxima iteração
 
 
+### Ordem de execução do simulador
 
-### Ordem de execução da simulação
+- Inicialização da estruturas
+- Simulação (loop principal)
+	- checagem de processos iniciando operação de IO
+		- se estiver iniciando processo sai da fila de prioridade e vai pra fila de IO
+		- processo vai pra estado bloqueado
+	- executando processo
+		- verificar processo com maior prioridade
+		- executa/finaliza/aplica preempção (round robin) no processo obtido
+		- em caso de finalização/preempção do processo obtido já executamos o próximo processo
+	- executa operações nas fila de IO (FCFS)
+	- insere novos processo na fila de alta prioridade
+		- baseado no tempo de chegada
+		- entra na fila com estado pronto
+	- checagem de processos com IO finalizado
+		- IO de disco finalizado volta para fila de baixa prioridade
+		- IO de fita magnética finalizado volta para fila de alta prioridade
+		- IO de impressora finalizado volta para fila de alta prioridade
+		- volta pra fila de prioridade com estado pronto
+	- mostra o estado de todas as fila ao final dessa iteração
+- mostra resultados da simulação
+- Liberação da memória alocada
 	
 
 ### TODO
 
-- oque deve ser feito a cada ciclo
-	
-	- detectar processos voltando de io. voltar pra fila de acordo com tipo de IO. mudar estado do processo para Ready
-	
-	- adicionar processos novos na fila de alta prioridade (se estiver no arrival time do processo)
-	
-	- checar se processo executando vai iniciar IO. Caso sim alterar estado para Blocked e enviar processo para fila de IO. resetar quantum desse processo
-	
-	- verificar se processo Running finalizou. mudar estado para finished e resetar quantum. verificar novo processo pra ser executado
-	
-	- decrementar burstTime do processo Running
-	
-	- verificar quantumCounter do processo e aplicar preempcao se necessario (processo interropido vai pra fila de baixa prioridade). executar novo processo.
 
-- liberar toda memoria alocada
+	metodos:
+		advance to next process
+		handle finished process
+		
+	handle finished process quando finalizar io?
+	
+	while na hora de verificar missingcyclestofinish?
+	
+	mudar nome cpu para scheduler?
 
-- metodo para detectar novo processo a ser executado (atualizar variavel crrtProcess da cpu e atualizar status)
+	metodo free all memory
 
-
-- mudar nome cpu para scheduler
-
-- metodo io type para string
 
 
 

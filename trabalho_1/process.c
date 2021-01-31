@@ -13,6 +13,7 @@ process_t* init_process(int arrival, int burst, process_t* parent)
 	p->missingCyclesToFinish = burst;
 	p->quantumCounter = 0;
 	p->io = init_random_io();
+	p->finishedTime = 0;
 	
 	if(parent != NULL)
 		p->ppid = parent->pid;
@@ -37,15 +38,16 @@ process_t** init_random_processes(int processNumber)
 
 void print_process(process_t* process)
 {
-	printf("PID: %d ", process->pid);
-	printf("PPID: %d ", process->ppid);
-	printf("Status: %s\t", get_string_from_execution_status(process->status));
-	printf("ArrivalTime: %d ", process->arrivalTime);
-	printf("BurstTime: %d ", process->burstTime);
-	printf("IO Relative Start Time: %d ", process->io->relativeStart);
-	printf("IO Burst Time: %d ", process->io->burstTime);
-	printf("IO Status: %s\t", get_string_from_execution_status(process->io->status));
-	printf("IO Type: %s\n", get_string_from_io_type(process->io->type));
+	printf("PID:" BRIGHT_GREEN " %d " RESET, process->pid);
+	printf("PPID:" BRIGHT_GREEN " %d " RESET, process->ppid);
+	printf("Status:" BRIGHT_GREEN " %s\t" RESET, get_string_from_execution_status(process->status));
+	printf("Arrival:" BRIGHT_GREEN " %d " RESET, process->arrivalTime);
+	printf("Burst:" BRIGHT_GREEN " %d " RESET, process->burstTime);
+	printf("Remaining Cycles:" BRIGHT_GREEN " %d " RESET, process->missingCyclesToFinish);
+	printf("IO Relative Start:" BRIGHT_GREEN " %d " RESET, process->io->relativeStart);
+	printf("IO Burst:" BRIGHT_GREEN " %d " RESET, process->io->burstTime);
+	printf("IO Status:" BRIGHT_GREEN " %s\t" RESET, get_string_from_execution_status(process->io->status));
+	printf("IO Type:" BRIGHT_GREEN " %s\n" RESET, get_string_from_io_type(process->io->type));
 }
 
 void print_processes(process_t** processes, int size)

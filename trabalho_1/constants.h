@@ -1,17 +1,21 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define QUANTUM 2
+#define QUANTUM 4
 
-#define MAX_PROCESSES 3
+#define MAX_PROCESSES 5
 #define MAX_ARRIVAL_TIME 3
-#define MAX_BURST_TIME 5
-#define MAX_CYCLES 500 // avoid infinity loop
+#define MAX_BURST_TIME 4
+#define MAX_CYCLES 1000 // avoid infinity loop
 #define MAX_IO_BURST_TIME 4
 
 #define TRUE 1
 #define FALSE 0
 #define bool int
+
+#define BRIGHT_GREEN "\x1b[92m"
+#define BRIGHT_CYAN  "\x1b[96m"
+#define RESET		 "\x1b[0m"
 
 typedef enum
 { 

@@ -12,6 +12,7 @@ int main(){
 	srand(1);
 	
 	process_t** allProcesses = init_random_processes(MAX_PROCESSES);
+	printf("Quantum: %d\n", QUANTUM);
 	printf("Created processes:\n");
 	print_processes(allProcesses, MAX_PROCESSES);
 	printf("\n");

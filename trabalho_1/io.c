@@ -7,8 +7,8 @@ io_t* init_io(IO_TYPE ioType)
 	io_t* io = (io_t*) malloc(sizeof(io_t));
 	
 	io->type = ioType;
-	io->startTime = 0;
-	io->finishTime = 0;
+	io->startTime = -1;
+	io->finishTime = -1;
 	io->burstTime = (rand() % MAX_IO_BURST_TIME) + 1; // certify burst time is not zero
 	io->usingTime = 0;
 	io->relativeStart = 0;

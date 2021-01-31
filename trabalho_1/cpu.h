@@ -8,8 +8,8 @@
 #include "io.h"
 #include "queue.h"
 
-typedef struct {
-	
+typedef struct
+{	
 	int currentCycle;
 	
 	process_t** processes;
@@ -51,12 +51,15 @@ void manage_process_back_from_io(cpu_t* cpu, queue_t* queue);
 void insert_new_process_on_high_priority_queue(cpu_t* cpu, process_t* process);
 
 // execute io of process from desired io queue
-void execute_io_operation(queue_t* queue);
+void execute_io_operation(cpu_t* cpu, queue_t* queue);
 
 // check process io is at relative start from process execution
 void check_process_is_starting_io(cpu_t* cpu, process_t* process);
 
 // checks if only one process (from both queues) is executing at the time
 bool check_only_one_process_is_being_executed(cpu_t* cpu);
+
+// show simulation results
+void print_results(process_t** processes);
 
 #endif

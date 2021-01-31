@@ -19,6 +19,7 @@ typedef struct
 	EXECUTION_STATUS status;	// process current status
 	int quantumCounter;     	// slice time counter
 	int missingCyclesToFinish;	// missing time to process finishing
+	int finishedTime;			// cycle that process has finished execution
 	
 } process_t;
 
