@@ -13,10 +13,10 @@ int main(){
         scanf("%s", command);
         int ret = fork();
         if(ret == 0){
-            char path[50] = "/bin/";
-            strcat(path,command);
+            //char path[50] = "/bin/";
+            //strcat(path,command);
             fflush(stdout);
-            execl(path, command, (char *) NULL);
+            execl(command, command, (char *) NULL);
             perror("");
         }
         else{
