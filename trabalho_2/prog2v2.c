@@ -19,6 +19,7 @@ int main(){
     int i;
     while(stop == FALSE){
         fgets(line,500, stdin);
+        line[strcspn(line, "\n")] = 0;
         strcpy(line_cpy,line);
         char *word = strtok(line_cpy, " ");
         command = word;
@@ -51,7 +52,7 @@ int main(){
             //char path[50] = "/bin/";
             //strcat(path,command);
             fflush(stdout);
-            printf("%s\n", command);
+            //printf("%s\n", command);
             for(i = 0; i < num_args; i++){
                 //printf("%s\n", args[i]);
             }

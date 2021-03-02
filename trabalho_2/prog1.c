@@ -51,7 +51,7 @@ int main(void)
     if(cpid = fork())
     {
         if(cpid == -1) exit(EXIT_FAILURE);
-        //***** Faça com que o processo pai execute este trecho de código
+        //***** Faï¿½a com que o processo pai execute este trecho de cï¿½digo
         
         //***** Mostre na console o PID do processo pai e do processo filho
         printf("PAI -> pid processo pai: %d , pid processo filho: %d\n", getpid(), cpid);
@@ -82,16 +82,16 @@ int main(void)
         }
         close(pipeToParent[READ]);
         
-        //***** Aguarde o término do processo filho
+        //***** Aguarde o tï¿½rmino do processo filho
         if(waitpid(-1, &status, 0) == -1) exit(EXIT_FAILURE);
         
-        //***** Informe na tela que o filho terminou e que o processo pai também vai encerrar
+        //***** Informe na tela que o filho terminou e que o processo pai tambï¿½m vai encerrar
         printf("PAI -> processo filho finalizado. finalizando processo pai\n");
         
     }
     // processo filho
     else {
-        //***** Faça com que o processo filho execute este trecho de código
+        //***** Faï¿½a com que o processo filho execute este trecho de cï¿½digo
         
         //***** Mostre na tela o PID do processo corrente e do processo pai
         printf("FILHO -> pid processo pai: %d , pid processo filho: %d\n", getppid(), getpid());
@@ -112,24 +112,24 @@ int main(void)
             printf("FILHO -> falha ao enviar mensagem\n");
         else printf("FILHO -> mensagem enviada para processo pai: %s\n", message);
         
-        //***** Execute o comando “for” abaixo
+        //***** Execute o comando ï¿½forï¿½ abaixo
         for (j = 0; j <= 10000; j++);
         
-        //***** Envie mensagem ao processo pai com o valor final de “j”
+        //***** Envie mensagem ao processo pai com o valor final de ï¿½jï¿½
         void* msg2 = buildMessage(integer_t, &j, sizeof(int));
         if(write(pipeToParent[WRITE], msg2, sizeof(MsgType) + sizeof(int)) == -1)
             printf("FILHO -> falha ao enviar mensagem\n");
         printf("FILHO -> valor de j enviado: %d\n", j);
         close(pipeToParent[WRITE]);
         
-        //***** Execute o comando abaixo e responda às perguntas
-        if(execl("/Bin/ls", "ls", NULL) == -1)
-            printf("FILHO -> erro na chamada execl\n");
+        //***** Execute o comando abaixo e responda ï¿½s perguntas
+        if(execl("/Bin/ls", "ls", NULL) == -1);
+            //printf("FILHO -> erro na chamada execl\n");
         
-        //***** O que acontece após este comando?
+        //***** O que acontece apï¿½s este comando?
         // nada, pois o execl retorna erro (Bin ao inves de bin)
         
-        //***** O que pode acontecer se o comando “execl” falhar?
+        //***** O que pode acontecer se o comando ï¿½execlï¿½ falhar?
         // a imagem do processo filho nao vai ser alterada, logo o programa ira finalizar
     }
     
